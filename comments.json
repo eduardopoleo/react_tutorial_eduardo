@@ -2,5 +2,33 @@
     {
         "author": "Pete Hunt",
         "text": "Hey there!"
+    },
+    {
+        "author": "Hey this is my app",
+        "text": "Yeah this is the app"
+    },
+    {
+        "author": "Eduardo",
+        "text": "This reactive stuff is awesome !1"
+    },
+    {
+        "author": "Lina",
+        "text": "soy la baby yei!"
+    },
+    {
+        "author": "Ricardo",
+        "text": "Yo no se programa en ruby but who cares!"
+    },
+    {
+        "author": "Javier",
+        "text": "Quiero skiar"
+    },
+    {
+        "author": "Data modified 1",
+        "text": "Quiero skiar"
+    },
+    {
+        "author": "Data modified 2",
+        "text": "Quiero skiar"
     }
 ]
