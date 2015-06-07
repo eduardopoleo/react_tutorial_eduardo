@@ -28,6 +28,9 @@ var CommentBox = React.createClass({
 
   //It is here right here:
   handleCommentSubmit: function(comment) {
+    var comments = this.state.data;
+    var newComments = comments.concat([comment]);
+    this.setState({data: newComments});
     $.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -51,7 +54,7 @@ var CommentBox = React.createClass({
     this.loadCommentsFromServer();      
     setInterval(this.loadCommentsFromServer, this.props.pollInterval);
   },
-  
+
   render : function(){
     return(
       <div className='commentBox'>
