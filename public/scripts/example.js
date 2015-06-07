@@ -26,6 +26,23 @@ var CommentBox = React.createClass({
     });
   },
 
+  //It is here right here:
+  handleCommentSubmit: function(comment) {
+    $.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      type: 'POST',
+      //How does it know that the date is stored in comment?
+      data: comment,
+      success: function(data){
+        this.setState({data: data});
+      }.bind(this),
+      error: function(xhr, status, err){
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+
   getInitialState : function() {
     return {data: []};
   },
@@ -34,23 +51,44 @@ var CommentBox = React.createClass({
     this.loadCommentsFromServer();      
     setInterval(this.loadCommentsFromServer, this.props.pollInterval);
   },
+  
   render : function(){
     return(
       <div className='commentBox'>
         <h1> Comments </h1>
         <CommentList data={this.state.data} />
-        <CommentForm />
+        //The handler is passed to the child as props
+        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
       </div>
     );
   }
 }); 
 
 var CommentForm = React.createClass({
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var author = React.findDOMNode(this.refs.author).value.trim();
+    var text = React.findDOMNode(this.refs.text).value.trim();
+    if (!text || !author){
+      return;
+    }
+    //here we have to to use props because the handler is coming
+    //from the parent passed in as a property (CommentBox)
+    this.props.onCommentSubmit({author: author, text: text});
+
+    React.findDOMNode(this.refs.author).value = '';
+    React.findDOMNode(this.refs.text).value = '';
+    return;
+  },
   render : function(){
     return(
-      <div className='commentForm'>
-        Hey this is a comment form yei
-      </div>
+      //Here we can use this.handleSubmit because we define
+      //the component handler inside the component
+      <form className='commentForm' onSubmit={this.handleSubmit}>
+        <input type="text" placeholder="Your name" ref="author" />
+        <input type="text" placeholder="Say something" ref="text" />
+        <input type="submit" placeholder="Post" />
+      </form>
     );
   }
 });
@@ -87,6 +125,12 @@ var Comment = React.createClass({
 });
 
 React.render(
-  <CommentBox url="comments.json" pollInterval={2000}/>,
+  <CommentBox url="comments.json" pollInterval={1000}/>,
   document.getElementById('content')
 );
+//Notes:
+//.props is basically how a child sets the info set by its parent
+// they are consider immutable and do not affect the rendering
+//.state has to do with the state of an specific attribute of the component
+//handlers are used to literally handle events and can be defined
+//internally or passed as props to the children
